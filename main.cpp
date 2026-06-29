@@ -108,7 +108,7 @@ std::string getHostname(std::string hostnamePath)
 int main()
 {
     // Adress to send data to (typically where your dashboard runs)
-    std::string SERVER_ADDRESS = "localhost";
+    std::string SERVER_ADDRESS = "127.0.0.1";
 
     // Files used as source
     std::string hostnamePath = "/etc/hostname";
@@ -116,7 +116,6 @@ int main()
     std::string temperaturePath = "/sys/class/thermal/thermal_zone0/temp";
 
     // seting up socket
-    int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 
     sockaddr_in serverAddress;
     serverAddress.sin_family = AF_INET;
@@ -125,6 +124,8 @@ int main()
 
     while (true)
     {
+        int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+
         connect(clientSocket, (struct sockaddr *)&serverAddress, sizeof(serverAddress));
 
         // constructing JSON
@@ -146,8 +147,10 @@ int main()
 
         send(clientSocket, jsonDataSerializated.c_str(), strlen(jsonDataSerializated.c_str()), 0);
 
-        sleep(30);
-        }
+        close(clientSocket);
+
+        sleep(5);
+    }
 
     return 0;
 }
