@@ -4,12 +4,14 @@
 #include <fstream>
 #include <tuple>
 #include <regex>
+#include <netinet/in.h>
+#include <sys/socket.h>
 
-int getTemperature(std::string temperatureMemoryPath)
+int getTemperature(std::string temperaturePath)
 {
-    std::ifstream temperatureFile(temperatureMemoryPath);
+    std::ifstream temperatureFileStream(temperaturePath);
 
-    if (!temperatureFile.is_open())
+    if (!temperatureFileStream.is_open())
     {
         std::cout << "Couldn't open the temperature file \n";
         return 0;
@@ -17,7 +19,9 @@ int getTemperature(std::string temperatureMemoryPath)
 
     std::string temperatureStr;
 
-    temperatureFile >> temperatureStr;
+    temperatureFileStream >> temperatureStr;
+
+    temperatureFileStream.close();
 
     int temperature = stoi(temperatureStr);
 
@@ -25,11 +29,11 @@ int getTemperature(std::string temperatureMemoryPath)
     return temperature;
 }
 
-std::tuple<int, int> getMemory(std::string memoryFilePath)
+std::tuple<int, int> getMemory(std::string memoryPath)
 {
-    std::ifstream memoryFile(memoryFilePath);
+    std::ifstream memoryFileStream(memoryPath);
 
-    if (!memoryFile.is_open())
+    if (!memoryFileStream.is_open())
     {
         std::cout << "Couldn't open the memory file" << "\n";
         return std::make_tuple(0, 0);
@@ -38,8 +42,10 @@ std::tuple<int, int> getMemory(std::string memoryFilePath)
     std::string rawTotal;
     std::string rawFree;
 
-    getline(memoryFile, rawTotal); // MemTotal:        8255888 kB
-    getline(memoryFile, rawFree);  // MemFree:         6814080 kB
+    getline(memoryFileStream, rawTotal); // MemTotal:        8255888 kB
+    getline(memoryFileStream, rawFree);  // MemFree:         6814080 kB
+
+    memoryFileStream.close();
 
     std::smatch match;
     std::regex regex(R"(\d+)");
@@ -76,32 +82,38 @@ std::tuple<int, int> getMemory(std::string memoryFilePath)
     return std::tuple(totalMem, freeMem); // values in kB
 }
 
-std::string getHostname()
+std::string getHostname(std::string hostnamePath)
 {
-    std::ifstream hostnameFile("/etc/hostname");
+    std::ifstream hostnameFileStream(hostnamePath);
 
     std::string hostname;
 
-    if (!hostnameFile.is_open())
+    if (!hostnameFileStream.is_open())
     {
         std::cout << "Couldn't open the memory file" << "\n";
         return "Unknown";
     }
 
-    getline(hostnameFile, hostname);
+    getline(hostnameFileStream, hostname);
+
+    hostnameFileStream.close();
 
     return hostname;
 }
 
 int main()
 {
+    // Adress to send data to (typically where your dashboard runs)
+    std::string SERVER_ADDRESS = "localhost";
 
-    std::string memoryFilePath = "/proc/meminfo";
-    std::string temperatureMemoryPath = "/sys/class/thermal/thermal_zone0/temp";
+    // Files used as source
+    std::string hostnamePath = "/etc/hostname";
+    std::string memoryPath = "/proc/meminfo";
+    std::string temperaturePath = "/sys/class/thermal/thermal_zone0/temp";
 
-    std::cout << getTemperature(temperatureMemoryPath) << "\n";
+    std::cout << getTemperature(temperaturePath) << "\n";
 
-    std::tuple<int, int> memoryData = getMemory(memoryFilePath);
+    std::tuple<int, int> memoryData = getMemory(memoryPath);
 
     int totalMemory = std::get<0>(memoryData);
     int freeMemory = std::get<1>(memoryData);
@@ -109,6 +121,9 @@ int main()
     std::cout << totalMemory << "\n"
               << freeMemory << "\n";
 
-    std::cout << getHostname() << "\n";
+    std::cout << getHostname(hostnamePath) << "\n";
+
+    // TODO: add client socket that periodically sends system data to Python socket
+
     return 0;
 }
