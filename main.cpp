@@ -7,6 +7,8 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <unistd.h>
+
 #include <nlohmann/json.hpp>
 
 int getTemperature(std::string temperaturePath)
@@ -31,14 +33,14 @@ int getTemperature(std::string temperaturePath)
     return temperature;
 }
 
-std::tuple<std::string, std::string> getMemory(std::string memoryPath)
+std::tuple<int, int> getMemory(std::string memoryPath)
 {
     std::ifstream memoryFileStream(memoryPath);
 
     if (!memoryFileStream.is_open())
     {
         std::cout << "Couldn't open the memory file" << "\n";
-        return std::make_tuple("0", "0");
+        return std::make_tuple(0, 0);
     }
 
     std::string rawTotal;
@@ -52,31 +54,31 @@ std::tuple<std::string, std::string> getMemory(std::string memoryPath)
     std::smatch match;
     std::regex regex(R"(\d+)");
 
-    std::string totalMem;
-    std::string freeMem;
+    int totalMem;
+    int freeMem;
 
     // Regex on total
 
     if (std::regex_search(rawTotal, match, regex))
     {
-        totalMem = match.str();
+        totalMem = stoi(match.str());
     }
     else
     {
         std::cout << "Could find number in total memory string" << "\n";
-        totalMem = "0";
+        totalMem = 0;
     }
 
     // Regex on free
 
     if (std::regex_search(rawFree, match, regex))
     {
-        freeMem = match.str();
+        freeMem = stoi(match.str());
     }
     else
     {
         std::cout << "Could find number in total memory string" << "\n";
-        freeMem = "0";
+        freeMem = 0;
     }
 
     // total memory , free memory
@@ -113,35 +115,39 @@ int main()
     std::string memoryPath = "/proc/meminfo";
     std::string temperaturePath = "/sys/class/thermal/thermal_zone0/temp";
 
-    std::cout << getTemperature(temperaturePath) << "\n";
-
-    std::tuple<std::string, std::string> memoryData = getMemory(memoryPath);
-
-    std::string totalMemory = std::get<0>(memoryData);
-    std::string freeMemory = std::get<1>(memoryData);
-
-    std::cout << totalMemory << "\n"
-              << freeMemory << "\n";
-
-    std::cout << getHostname(hostnamePath) << "\n";
-
-    // TODO: add client socket that periodically sends system data to Python socket
-
     // seting up socket
     int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 
     sockaddr_in serverAddress;
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_port = htons(8181);
-    serverAddress.sin_addr.s_addr = inet_addr("192.168.88.42");
+    serverAddress.sin_addr.s_addr = inet_addr(SERVER_ADDRESS.c_str());
 
     while (true)
     {
         connect(clientSocket, (struct sockaddr *)&serverAddress, sizeof(serverAddress));
 
-        // send(clientSocket, message, strlen(message), 0);
-        // TODO: add JSON
-    }
+        // constructing JSON
+
+        std::tuple<int, int> memoryData = getMemory(memoryPath);
+        int totalMemory = std::get<0>(memoryData);
+        int freeMemory = std::get<1>(memoryData);
+
+        int temperature = getTemperature(temperaturePath);
+
+        std::string hostname = getHostname(hostnamePath);
+
+        nlohmann::json jsonData = {{"temperature", temperature},
+                                   {"totalMemory", totalMemory},
+                                   {"freeMemory", freeMemory},
+                                   {"hostname", hostname}};
+
+        std::string jsonDataSerializated = jsonData.dump();
+
+        send(clientSocket, jsonDataSerializated.c_str(), strlen(jsonDataSerializated.c_str()), 0);
+
+        sleep(30);
+        }
 
     return 0;
 }
