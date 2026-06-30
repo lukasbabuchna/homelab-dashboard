@@ -14,7 +14,7 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir flask
+RUN pip install --no-cache-dir flask turbo-flask
 
 COPY --from=builder /app/build/main .
 

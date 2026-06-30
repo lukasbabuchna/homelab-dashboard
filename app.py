@@ -2,6 +2,11 @@ from flask import Flask, render_template
 import socket
 import threading
 import json
+from turbo_flask import Turbo
+
+
+app = Flask(__name__)
+turbo = Turbo(app)
 
 dataJson = dict()
 
@@ -11,19 +16,21 @@ def socketListener():
     s.listen()
 
     while True:
-        client, addr = s.accept()
-        jsonStr = client.recv(1024).decode()
+        with app.app_context():
+            client, addr = s.accept()
+            jsonStr = client.recv(1024).decode()
 
-        deviceDataJson = json.loads(jsonStr)
+            deviceDataJson = json.loads(jsonStr)
 
-        dataJson[deviceDataJson["hostname"]] = deviceDataJson
+            dataJson[deviceDataJson["hostname"]] = deviceDataJson
 
-        client.close()
+            client.close()
+
+            turbo.push(turbo.replace(render_template('load.html', dataJson=dataJson), 'load'))
 
 
 
 
-app = Flask(__name__)
 
 @app.route('/')
 def index():

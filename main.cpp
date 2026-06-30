@@ -109,6 +109,7 @@ int main()
 {
     // Adress to send data to (typically where your web dashboard runs)
     std::string SERVER_ADDRESS = "127.0.0.1";
+    int REFRESH_TIME = 1; // in seconds
 
     // Files used as source
     std::string hostnamePath = "/etc/hostname";
@@ -149,7 +150,7 @@ int main()
 
         close(clientSocket);
 
-        sleep(5);
+        sleep(REFRESH_TIME);
     }
 
     return 0;
