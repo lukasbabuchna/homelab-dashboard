@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Homelab Dashboard</title>
+  </head>
+  <body>
+    <h1>Homelab Dashboard</h1>
+
+        <ul>
+            {%for device in dataJson.keys()%}
+                <li>{{device}}</li>
+                    <ul>
+                        <li>Hostname: {{dataJson[device].get("hostname")}}</li>
+                        <li>Total memory: {{dataJson[device].get("totalMemory") // 1000}} MB</li>
+                        <li>Free memory: {{dataJson[device].get("freeMemory") // 1000}} MB</li>
+                        <li>Temperature: {{dataJson[device].get("temperature") / 1000}}˚C</li>
+                    </ul>
+            {%endfor%}
+        </ul>
+
+
+  </body>
+</html>

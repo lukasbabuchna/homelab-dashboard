@@ -107,7 +107,7 @@ std::string getHostname(std::string hostnamePath)
 
 int main()
 {
-    // Adress to send data to (typically where your dashboard runs)
+    // Adress to send data to (typically where your web dashboard runs)
     std::string SERVER_ADDRESS = "127.0.0.1";
 
     // Files used as source

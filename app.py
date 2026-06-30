@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 import socket
 import threading
 import json
@@ -29,7 +29,7 @@ app = Flask(__name__)
 def index():
 
 
-    return json.dumps(dataJson)
+    return render_template("index.html", dataJson=dataJson)
 
 
 if __name__ == '__main__':
