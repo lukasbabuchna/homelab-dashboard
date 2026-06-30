@@ -6,11 +6,11 @@ WORKDIR /app
 
 COPY CMakeLists.txt main.cpp ./
 
-RUN mkdir build && cd build && cmake .. & cmake --build .
+RUN mkdir build && cd build && cmake .. && cmake --build .
 
 
 
-FROM python:3.11
+FROM python:3.11-slim
 
 WORKDIR /app
 
