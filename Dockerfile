@@ -1,6 +1,6 @@
 FROM ubuntu:22.04 AS builder
 
-RUN  apt-get install -y cmake build-essentials git && rm -rf /var/lib/apt/lists/*
+RUN  apt-get update && apt-get install -y cmake build-essential git && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
