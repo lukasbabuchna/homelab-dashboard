@@ -1,4 +1,4 @@
-FROM FROM ubuntu:22.04 AS builder
+FROM ubuntu:22.04 AS builder
 
 RUN  apt-get install -y cmake build-essentials git && rm -rf /var/lib/apt/lists/*
 
