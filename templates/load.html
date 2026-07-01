@@ -11,12 +11,12 @@
           <li>Free memory: {{dataJson[device].get("freeMemory") // 1000}} MB</li>
           <li>Temperature: {{dataJson[device].get("temperature") / 1000}}˚C</li>
           <li>Number of CPU cores: {{dataJson[device].get("numOfCPUCores")}}</li>
-          <li>Load avarage over 1 minute: {{dataJson[device].get("load1") | round(3)}}</li>
-          <li>Load avarage over 5 minutes: {{dataJson[device].get("load5") | round(3)}}</li>
-          <li>Load avarage over 15 minutes: {{dataJson[device].get("load15") | round(3)}}</li>
-          <li>Normalized load avarage over 1 minute: {{dataJson[device].get("load1") / dataJson[device].get("numOfCPUCores") | round(3)}}</li>
-          <li>Normalized load avarage over 5 minutes: {{dataJson[device].get("load5") / dataJson[device].get("numOfCPUCores") | round(3)}}</li>
-          <li>Normalized load avarage over 15 minutes: {{dataJson[device].get("load15") / dataJson[device].get("numOfCPUCores") | round(3)}}</li>
+          <li>Load avarage over 1 minute: {{dataJson[device].get("load1") | round(2)}}</li>
+          <li>Load avarage over 5 minutes: {{dataJson[device].get("load5") | round(2)}}</li>
+          <li>Load avarage over 15 minutes: {{dataJson[device].get("load15") | round(2)}}</li>
+          <li>Normalized load avarage over 1 minute: {{(dataJson[device].get("load1") / dataJson[device].get("numOfCPUCores")) | round(2)}}</li>
+          <li>Normalized load avarage over 5 minutes: {{(dataJson[device].get("load5") / dataJson[device].get("numOfCPUCores")) | round(2)}}</li>
+          <li>Normalized load avarage over 15 minutes: {{(dataJson[device].get("load15") / dataJson[device].get("numOfCPUCores")) | round(2)}}</li>
         </ul>
     {%endfor%}
   </ul>
