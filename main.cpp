@@ -215,10 +215,9 @@ int main()
         std::string hostname = getHostname(hostnamePath);
 
         std::tuple<float, float, float> avgLoads = getLoadAvarage(loadAvaragePath);
-        // rounding to 2 decimal places
-        float load1 = std::round(std::get<0>(avgLoads) * 100.0f) / 100.0f;
-        float load5 = std::round(std::get<1>(avgLoads) * 100.0f) / 100.0f;
-        float load15 = std::round(std::get<2>(avgLoads) * 100.0f) / 100.0f;
+        float load1 = std::get<0>(avgLoads);
+        float load5 = std::get<1>(avgLoads);
+        float load15 = std::get<2>(avgLoads);
 
         int numOfCPUCores = getNumOfCPUCores(numOfCPUCoresPath);
 
@@ -226,7 +225,7 @@ int main()
                                    {"totalMemory", totalMemory},
                                    {"freeMemory", freeMemory},
                                    {"hostname", hostname},
-                                   {"load1", 0},
+                                   {"load1", load1},
                                    {"load5", load5},
                                    {"load15", load15},
                                    {"numOfCPUCores", numOfCPUCores}};
