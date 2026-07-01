@@ -216,9 +216,9 @@ int main()
 
         std::tuple<float, float, float> avgLoads = getLoadAvarage(loadAvaragePath);
         // rounding to 2 decimal places
-        float load1 = std::ceil(std::get<0>(avgLoads) * 100) / 100;
-        float load5 = std::ceil(std::get<1>(avgLoads) * 100) / 100;
-        float load15 = std::ceil(std::get<2>(avgLoads) * 100) / 100;
+        float load1 = std::round(std::get<0>(avgLoads) * 100.0f) / 100.0f;
+        float load5 = std::round(std::get<1>(avgLoads) * 100.0f) / 100.0f;
+        float load15 = std::round(std::get<2>(avgLoads) * 100.0f) / 100.0f;
 
         int numOfCPUCores = getNumOfCPUCores(numOfCPUCoresPath);
 
