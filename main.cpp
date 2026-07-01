@@ -10,6 +10,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <vector>
+#include <cmath>
 
 #include <nlohmann/json.hpp>
 
@@ -214,9 +215,10 @@ int main()
         std::string hostname = getHostname(hostnamePath);
 
         std::tuple<float, float, float> avgLoads = getLoadAvarage(loadAvaragePath);
-        float load1 = std::get<0>(avgLoads);
-        float load5 = std::get<0>(avgLoads);
-        float load15 = std::get<0>(avgLoads);
+        // rounding to 2 decimal places
+        float load1 = std::ceil(std::get<0>(avgLoads) * 100) / 100;
+        float load5 = std::ceil(std::get<1>(avgLoads) * 100) / 100;
+        float load15 = std::ceil(std::get<2>(avgLoads) * 100) / 100;
 
         int numOfCPUCores = getNumOfCPUCores(numOfCPUCoresPath);
 
