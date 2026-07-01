@@ -23,7 +23,7 @@ def socketListener():
         deviceDataJson = json.loads(jsonStr)
 
         # add IP address field
-        deviceDataJson["ipAddress"] = addr
+        deviceDataJson["ipAddress"] = addr[0] # addr is tuple (address, port) 
 
         dataJson[deviceDataJson["hostname"]] = deviceDataJson
 
