@@ -6,6 +6,7 @@
       <li>{{device}}</li>
         <ul>
           <li>Hostname: {{dataJson[device].get("hostname")}}</li>
+          <li>IP address: {{dataJson[device].get("ipAddress")}}</li>
           <li>Total memory: {{dataJson[device].get("totalMemory") // 1000}} MB</li>
           <li>Free memory: {{dataJson[device].get("freeMemory") // 1000}} MB</li>
           <li>Temperature: {{dataJson[device].get("temperature") / 1000}}˚C</li>

@@ -22,6 +22,9 @@ def socketListener():
 
         deviceDataJson = json.loads(jsonStr)
 
+        # add IP address field
+        deviceDataJson["ipAddress"] = addr
+
         dataJson[deviceDataJson["hostname"]] = deviceDataJson
 
         client.close()
