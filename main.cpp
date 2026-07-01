@@ -226,7 +226,7 @@ int main()
                                    {"totalMemory", totalMemory},
                                    {"freeMemory", freeMemory},
                                    {"hostname", hostname},
-                                   {"load1", load1},
+                                   {"load1", 0},
                                    {"load5", load5},
                                    {"load15", load15},
                                    {"numOfCPUCores", numOfCPUCores}};
