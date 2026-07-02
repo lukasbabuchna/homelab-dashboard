@@ -14,7 +14,7 @@
 
 #include <nlohmann/json.hpp>
 
-int getTemperature(std::string temperaturePath)
+int getTemperature(const std::string &temperaturePath)
 {
     std::ifstream temperatureFileStream(temperaturePath);
 
@@ -36,7 +36,7 @@ int getTemperature(std::string temperaturePath)
     return temperature;
 }
 
-std::tuple<int, int> getMemory(std::string memoryPath)
+std::tuple<int, int> getMemory(const std::string &memoryPath)
 {
     std::ifstream memoryFileStream(memoryPath);
 
@@ -89,7 +89,7 @@ std::tuple<int, int> getMemory(std::string memoryPath)
     return std::make_tuple(totalMem, freeMem); // values in kB
 }
 
-std::string getHostname(std::string hostnamePath)
+std::string getHostname(const std::string &hostnamePath)
 {
     std::ifstream hostnameFileStream(hostnamePath);
 
@@ -108,7 +108,7 @@ std::string getHostname(std::string hostnamePath)
     return hostname;
 }
 
-std::tuple<float, float, float> getLoadAvarage(std::string loadAvaragePath)
+std::tuple<float, float, float> getLoadAvarage(const std::string &loadAvaragePath)
 {
     std::ifstream loadAvarageFileStream(loadAvaragePath);
 
@@ -147,7 +147,7 @@ std::tuple<float, float, float> getLoadAvarage(std::string loadAvaragePath)
     return std::make_tuple(load1, load5, load15);
 }
 
-int getNumOfCPUCores(std::string numOfCPUCoresPath)
+int getNumOfCPUCores(const std::string &numOfCPUCoresPath)
 {
     std::ifstream numOfCPUCoresFileStream(numOfCPUCoresPath);
 
